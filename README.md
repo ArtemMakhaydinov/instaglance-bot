@@ -1,2 +1,3 @@
 # instaglance-bot
-Simple telegram bot to scrape photos from instagram
+
+Simple telegram bot to scrape content from instagram

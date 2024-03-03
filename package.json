@@ -1,0 +1,28 @@
+{
+  "name": "instaglance-bot",
+  "version": "1.0.0",
+  "description": "Simple telegram bot to scrape photos from instagram",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node ./dist/app.js",
+    "devstart": "export DEBUG='grammy*' && nodemon ./dist/app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "eslint": "^8.56.0",
+    "nodemon": "^3.0.3",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@grammyjs/types": "^3.5.2",
+    "@types/dotenv": "^8.2.0",
+    "@types/node": "^20.11.19",
+    "dotenv": "^16.4.1",
+    "grammy": "^1.20.4"
+  }
+}

@@ -8,7 +8,7 @@ export class StartCommand extends Command {
 
 	handle(): void {
 		this.bot.command('start', (ctx) => {
-			ctx.reply('Welcome!11');
+			ctx.reply('Welcome!12');
 		});
 	}
 }

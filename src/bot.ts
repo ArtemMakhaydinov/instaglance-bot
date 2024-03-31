@@ -1,22 +1,19 @@
 import { Command } from './commands/command.class';
 import { StartCommand } from './commands/start.command';
-import { IEnvConfigService } from './config/env.config.interface';
+import { IEnvConfig } from './config/env.config.interface';
 import { Bot, BotConfig } from 'grammy';
-import { EnvConfigService } from './config/env.config.service';
+import { EnvConfig } from './config/env.config.service';
 import { IBotContext } from './context/context.interface';
 
 export class InstaglanceBot {
 	private bot: Bot<IBotContext>;
 	commands: Command[] = [];
+	envConfigService: IEnvConfig;
 
-	constructor(
-		private readonly envConfigService: IEnvConfigService,
-		private readonly botConfig?: BotConfig<IBotContext>
-	) {
-		this.bot = new Bot<IBotContext>(
-			this.envConfigService.get('TOKEN'),
-			botConfig
-		);
+	constructor(private readonly botConfig?: BotConfig<IBotContext>) {
+		this.envConfigService = EnvConfig.getInstance();
+		this.bot = new Bot<IBotContext>(this.envConfigService.get('TOKEN'), botConfig);
+		this.init();
 	}
 
 	init() {
@@ -29,5 +26,4 @@ export class InstaglanceBot {
 	}
 }
 
-const bot = new InstaglanceBot(new EnvConfigService());
-bot.init();
+const bot = new InstaglanceBot();

@@ -1,9 +1,9 @@
-export interface IEnvConfigStatic {
+export interface IScraperStatic {
 	instance: InstanceType<this> | null;
 	new (...args: any[]): any;
 	getInstance(URL: string): InstanceType<this>;
 }
 
-export interface IEnvConfig {
-	get(key: string): string;
+export interface IScraper {
+	getImgURLs(login: string): Promise<string[]>;
 }

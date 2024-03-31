@@ -1,18 +1,18 @@
 import { InstaglanceBot } from './bot';
-import { IEnvConfigService } from './config/env.config.interface';
-import { EnvConfigService } from './config/env.config.service';
+import { IEnvConfig } from './config/env.config.interface';
+import { EnvConfig } from './config/env.config.service';
 import { SocksProxyAgent } from 'socks-proxy-agent';
 
 class Proxy {
 	socsAgent: SocksProxyAgent;
-	constructor(private readonly configService: IEnvConfigService) {
+	constructor(private readonly configService: IEnvConfig) {
 		this.socsAgent = new SocksProxyAgent(
 			this.configService.get('PROXY_URL')
 		);
 	}
 }
 
-const envConfigService = new EnvConfigService();
+const envConfigService = new EnvConfig();
 const botConfig = {
 	client: {
 		baseFetchConfig: {

@@ -5,23 +5,18 @@ import { SocksProxyAgent } from 'socks-proxy-agent';
 
 class Proxy {
 	socsAgent: SocksProxyAgent;
-	constructor(private readonly configService: IEnvConfig) {
-		this.socsAgent = new SocksProxyAgent(
-			this.configService.get('PROXY_URL')
-		);
+	envConfigService: IEnvConfig;
+	constructor() {
+		this.envConfigService = EnvConfig.getInstance();
+		this.socsAgent = new SocksProxyAgent(this.envConfigService.get('PROXY_URL'));
 	}
 }
 
-const envConfigService = new EnvConfig();
-const botConfig = {
+export const botConfigForProxy = {
 	client: {
 		baseFetchConfig: {
-			agent: new Proxy(envConfigService),
+			agent: new Proxy(),
 			compress: true,
 		},
 	},
 };
-
-const socsAgent = new Proxy(envConfigService);
-const bot = new InstaglanceBot(envConfigService, botConfig);
-bot.init();

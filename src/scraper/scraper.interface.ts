@@ -5,5 +5,6 @@ export interface IScraperStatic {
 }
 
 export interface IScraper {
-	getImgURLs(login: string): Promise<string[]>;
+	getImgURLs(userId: string, login: string): Promise<string[]>;
+	closeAndDeletePage(userId: string): void;
 }

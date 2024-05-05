@@ -1,17 +1,26 @@
 import puppeteer, { Browser } from 'puppeteer';
 import { IScraper, IScraperStatic } from './scraper.interface';
-import { IInstagramPage } from './browser/instagram.page.interface';
-import { InstagramPage } from './browser/instagram.page.service';
+import { IInstagramPage } from './page/instagram.page.interface';
+import { InstagramPage } from './page/instagram.page.service';
+import { IEnvConfig } from '../config/env.config.interface';
+import { EnvConfig } from '../config/env.config.service';
 
 export class InstagramScraper implements IScraper {
 	private browser!: Browser;
 	static instance: InstanceType<IScraperStatic>;
 	private browserWSEndpoint!: string;
-	private pages: Map<string, IInstagramPage>;
+	private envConfigService!: IEnvConfig;
+	private pages!: Map<string, IInstagramPage>;
 
 	constructor() {
-		this.pages = new Map();
 		if (InstagramScraper.instance) return InstagramScraper.instance;
+		this.envConfigService = EnvConfig.getInstance();
+		this.pages = new Map();
+	}
+
+	async init() {
+		const page = await this.getPage('instaglance');
+		await page.setUpPage(this.envConfigService.get('INSTAGRAM_LOGIN'));
 	}
 
 	static getInstance() {
@@ -19,11 +28,12 @@ export class InstagramScraper implements IScraper {
 		return this.instance;
 	}
 
-	async getImgURLs(login: string): Promise<string[]> {
-		throw new Error('Method not implemented.');
+	async getImgURLs(userId: string, instagramName: string): Promise<string[]> {
+		const page = await this.getPage(userId);
+		return await page.getImgURLs(instagramName);
 	}
 
-	async getBrowser() {
+	private async getBrowser() {
 		if (this.browser?.connected) return this.browser;
 		if (this.browserWSEndpoint) {
 			this.browser = await puppeteer.connect({ browserWSEndpoint: this.browserWSEndpoint });
@@ -43,8 +53,14 @@ export class InstagramScraper implements IScraper {
 	private async getPage(userId: string): Promise<IInstagramPage> {
 		const browser = await this.getBrowser();
 		if (this.pages.has(userId)) return this.pages.get(userId)!;
-		const page = new InstagramPage(browser, userId);
+		const page = new InstagramPage(userId, browser);
 		this.pages.set(userId, page);
 		return page;
+	}
+
+	async closeAndDeletePage(userId: string): Promise<void> {
+		const page = this.pages.get(userId);
+		page?.closePage();
+		this.pages.delete(userId);
 	}
 }
